@@ -1,0 +1,48 @@
+% filename = 'teleop.txt'; % specify the filename
+% data = importdata(filename, ','); % read the data
+% x = data(:,1); % get the first column
+% y = data(:,2); % get the second column
+% plot(x,LineWidth=1) % plot the data
+% hold on
+% plot(y,LineWidth=1)
+% 
+
+xmin=0;
+xmax=10000;
+ymin = -1000;
+ymax= 1000;
+filename = 'teleop.txt'; % specify the filename
+figure; % create a new figure
+subplot(2,1,1); % create a subplot for the first plot
+h1 = plot(NaN,NaN,'LineWidth',1); % create an empty plot for the first column
+hold on;
+h2 = plot(NaN,NaN,'LineWidth',1); % create an empty plot for the second column
+legend('master','slave')
+title('Teleoperation');
+xlabel('Time (ms)');
+ylabel('Position');
+xlim([xmin xmax]); % set the x-axis limits for the first subplot
+ylim([ymin ymax]);
+subplot(2,1,2); % create a subplot for the second plot
+h3 = plot(NaN,NaN,'LineWidth',1); % create an empty plot for the error
+title('Error');
+xlabel('Time (ms)');
+ylabel('Error');
+xlim([xmin xmax]); % set the x-axis limits for the second subplot
+% title('normalized error');
+% xlabel('Time (ms)');
+% ylabel('Error');
+
+while true % infinite loop
+    data = importdata(filename, ','); % read the data
+%     valid_rows = ~any(isnan(data), 2); % find rows that do not have any missing values
+%     data = data(valid_rows,:); % keep only the valid rows
+    x = data(:,1); % get the first column
+    y = data(:,2); % get the second column
+    set(h1,'XData',1:numel(x),'YData',x); % update the first plot with the new data
+    set(h2,'XData',1:numel(y),'YData',y); % update the second plot with the new data
+    set(h3,'XData',1:numel(x),'YData',abs(x-y)); %  error
+%     set(h3,'XData',1:numel(x),'YData',abs(x-y)./max(abs(x-y))); % normalized error
+    drawnow; % force MATLAB update
+   
+end
